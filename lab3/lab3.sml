@@ -2,17 +2,20 @@
    string), then you avoid several of the functions in problem 1 having
    polymorphic types that may be confusing *)
 fun same_string(s1: string, s2: string) =
-    s1 = s2
+    s1 = s2;
 
 (* solutions for problem 1 here *)
 
-fun all_except_option(s: string, lst: string list) =
-   case lst of 
+fun all_except_option(str,list)=
+   case list of
       [] => NONE
-      | x::xs =>
-            if same_string(x, s)
-            then SOME(xs)
-            else x::all_except_option(s, xs);
+      | x::list' => 
+         if same_string(x,str) 
+         then SOME(list')                  
+         else 
+            case all_except_option(str,list') of
+               NONE=>NONE
+               | SOME list'=>SOME(x::list')
 
 
 fun get_substitutions1(lst: string list list, s: string) : string list =
