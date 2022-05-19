@@ -124,3 +124,27 @@ fun score(cs: card list, goal: int) =
       then prevScore div 2
       else prevScore
    end;
+
+
+fun officiate(cards_list: card list, moves_list: move list, goal_score: int) : int =
+   let
+      fun next_move(cards_list, player_cards, moves_list) = 
+         case moves_list of
+         [] => score(player_cards, goal_score) | to_do::xs =>
+            let
+               fun get_card(cards_list, player_cards, moves_list) = 
+                  case cards_list of
+                     [] => score(player_cards, goal_score) | to_do::xs =>
+                           if sum_cards(to_do::player_cards) > goal_score
+                           then score(to_do::player_cards, goal_score)
+                           else next_move(xs, to_do::player_cards, moves_list)
+
+               fun discard_card(cards_list, player_cards, card, moves_list) =
+                  next_move(cards_list, remove_card(player_cards, card, IllegalMove), moves_list);
+            in
+               case to_do of
+                  Draw => get_card(cards_list, player_cards, xs) | Discard card => discard_card(cards_list, player_cards, card, xs)
+            end;
+   in
+      next_move(cards_list, [], moves_list)
+   end;
